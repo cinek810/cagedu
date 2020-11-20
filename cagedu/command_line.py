@@ -29,11 +29,11 @@ def main():
 
     rootNode = FileStat(rootDir,rootStat)
 
-#    logging.info("Building the tree information");
+    logging.info("Building the tree information");
     cdu.buildTree(rootNode, maxDepth=3)
 
-#    logging.info("Processing data structure");
+    logging.info("Processing data structure");
     cdu.calculateStats(rootNode)
 
-#    logging.info("Printing the tree");
+    logging.info("Printing the tree");
     cdu.printTree(rootNode)
