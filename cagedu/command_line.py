@@ -6,11 +6,21 @@ import cagedu.cagedu as cdu
 from cagedu.filestat import FileStat
 import sys,os
 import logging
+import argparse
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format='cdu: %(name)s %(message)s')
+    parser = argparse.ArgumentParser(description='Disk usage analysis tool.')
+    parser.add_argument('path', metavar='path', type=str, default='.',
+            help='Path where to start disk usage analysis')
+    parser.add_argument("-log", "--log", choices=["DEBUG", "INFO", "ERROR"],
+            type=str, default="INFO", metavar='log', help="Log level")
 
-    rootDir = sys.argv[1]
+    args = parser.parse_args()
+
+    logging.basicConfig(level=getattr(logging, str(args.log)),
+            format='cdu: %(name)s %(message)s')
+
+    rootDir = args.path
     try:
         rootStat = os.stat(rootDir)
     except:
