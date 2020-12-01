@@ -21,34 +21,24 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
             try:
                 statResult = os.stat(pathname)
                 mode = statResult.st_mode
-            except:
-                logging.debug('Stat failed, skipping %s' % pathname)
+            except Exception as e:
+                logging.debug('Stat failed:%s, skipping %s' % (e, pathname))
                 continue
 
-            logging.debug('Adding node %s to parent "%s"' % (pathname, top.name))
-            try:
-                newNode = FileStat(pathname, statResult, parent = top)
-            except UnicodeDecodeError:
-                logging.error("Encoding error with name: %s" % (pathname))
-                continue
-            
             if S_ISDIR(mode):
+                logging.debug('Adding node %s to parent "%s"' % (unicode(pathname).encode('utf-8'), top.name))
+                newNode = FileStat(pathname, statResult, parent = top)
                 newDepth = currentDepth + 1
                 buildTree(newNode, maxDepth = maxDepth, currentDepth = newDepth)
+            elif S_ISREG(mode):
+                top.addStats(statResult.st_size, statResult.st_mtime)
     else:
         logging.debug("Adding stats without new nodes")
         for path, subdirs, files in os.walk(top.name):
             for f in files:
                 logging.debug("Joining %s and %s" % (top.name, f));
                 pathname = os.path.join(path, f)
-                try:
-                    statResult = os.stat(pathname)
-                    mode = statResult.st_mode
-                except:
-                    logging.debug('Stat failed, skipping %s' % pathname)
-                    continue
-                logging.debug('Adding stat of %s to node "%s"' % (pathname, top.name))
-                top.addStats(statResult.st_size, statResult.st_mtime)
+                top.statAndAdd(pathname)
 
 def calculateStats(topNode):
 
@@ -68,9 +58,9 @@ def printTree(node):
             try:
                 timestamp = datetime.datetime.fromtimestamp(node.byteAge / node.totalSize)
                 date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                print("%s %s AveDate:%s Size:%.2fMB" % (unicode(pre), unicode(node.name), date , node.totalSize / 1024 / 1024 ))
+                print("%s %s AveDate:%s Size:%.2fMB" % (unicode(pre).encode('utf-8'), unicode(node.name).encode('utf-8'), date , node.totalSize / 1024 / 1024 ))
             except ZeroDivisionError:
-                print("%s %s (ZERO SIZE)" % (unicode(pre), unicode(node.name)))
+                print("%s %s (ZERO SIZE)" % (unicode(pre).encode('utf-8'), unicode(node.name).encode('utf-8')))
 
 
 def main(mainPath):

@@ -34,7 +34,7 @@ def main():
     start = time.time()
     cdu.buildTree(rootNode, maxDepth=3)
     end = time.time()
-    logging.info("\t took:%d seconds, processed:%d files" % (end-start, rootNode.totalFiles))
+    logging.info("\t took:%d seconds, processed:%d files" % (end - start, rootNode.totalFiles))
 
     logging.info("Processing data structure");
     cdu.calculateStats(rootNode)
