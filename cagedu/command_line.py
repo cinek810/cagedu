@@ -7,6 +7,7 @@ from cagedu.filestat import FileStat
 import sys,os
 import logging
 import argparse
+import time
 
 def main():
     parser = argparse.ArgumentParser(description='Disk usage analysis tool.')
@@ -30,7 +31,10 @@ def main():
     rootNode = FileStat(rootDir,rootStat)
 
     logging.info("Building the tree information");
+    start = time.time()
     cdu.buildTree(rootNode, maxDepth=3)
+    end = time.time()
+    logging.info("\t took:%d seconds, processed:%d files" % (end-start, rootNode.totalFiles))
 
     logging.info("Processing data structure");
     cdu.calculateStats(rootNode)
