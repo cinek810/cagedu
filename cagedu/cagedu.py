@@ -68,9 +68,9 @@ def printTree(node):
             try:
                 timestamp = datetime.datetime.fromtimestamp(node.byteAge / node.totalSize)
                 date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                print("%s %s AveDate:%s Size:%.2fMB" % (pre, node.name, date , node.totalSize / 1024 / 1024 ))
+                print("%s %s AveDate:%s Size:%.2fMB" % (unicode(pre), unicode(node.name), date , node.totalSize / 1024 / 1024 ))
             except ZeroDivisionError:
-                print("%s %s (ZERO SIZE)" % (pre, node.name))
+                print("%s %s (ZERO SIZE)" % (unicode(pre), unicode(node.name)))
 
 
 def main(mainPath):
