@@ -19,18 +19,19 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
         for f in os.listdir(top.name):
             pathname = os.path.join(top.name, f)
             try:
-                statResult = os.stat(pathname)
+                statResult = os.lstat(pathname)
                 mode = statResult.st_mode
             except Exception as e:
                 logging.debug('Stat failed:%s, skipping %s' % (e, pathname))
                 continue
 
             if S_ISDIR(mode):
-                logging.debug('Adding node %s to parent "%s"' % (unicode(pathname).encode('utf-8'), top.name))
+                logging.debug('Adding directory %s to parent "%s"' % (unicode(pathname).encode('utf-8'), top.name))
                 newNode = FileStat(pathname, statResult, parent = top)
                 newDepth = currentDepth + 1
                 buildTree(newNode, maxDepth = maxDepth, currentDepth = newDepth)
             elif S_ISREG(mode):
+                logging.debug('Adding stat below maxDepth=%d currentDepth=%d for file=%s' % (maxDepth, currentDepth, pathname))
                 top.addStats(statResult.st_size, statResult.st_mtime)
     else:
         logging.debug("Adding stats without new nodes")

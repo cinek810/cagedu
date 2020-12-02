@@ -2,6 +2,7 @@ from anytree import NodeMixin, RenderTree, findall
 from anytree.exporter import DotExporter
 import logging
 import os
+from stat import S_ISREG
 
 
 
@@ -36,13 +37,14 @@ class FileStat(NodeMixin):
 
     def statAndAdd(self, pathname):
         try:
-            statResult = os.stat(pathname)
+            statResult = os.lstat(pathname)
             mode = statResult.st_mode
         except Exception as e:
             logging.debug('Stat failed:%s, skipping %s' % (e, pathname))
             return
-        logging.debug('Adding stat of %s to node "%s"' % (pathname, self.name))
-        self.addStats(statResult.st_size, statResult.st_mtime)
+        if S_ISREG(mode):
+            logging.debug('Adding stat of %s to node "%s"' % (pathname, self.name))
+            self.addStats(statResult.st_size, statResult.st_mtime)
 
 
 
