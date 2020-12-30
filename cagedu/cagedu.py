@@ -85,7 +85,7 @@ def nodeStyle(node):
     nodeSize = min(9, nodeSize)
     nodeSize = max(2, nodeSize)
 
-    return 'href="subdir/'+str(node.name)+'.svg";style=filled;color=black;fillcolor="'+str(hexColor)+'";width="'+str(nodeSize)+'"fixedsize=true;'
+    return 'href="'+str(node.name)+'.svg";style=filled;color=black;fillcolor="'+str(hexColor)+'";width="'+str(nodeSize)+'"fixedsize=true;'
 
 def sizeof_fmt(num, suffix='B'):
     for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
@@ -103,10 +103,12 @@ def exportWithStyle(node, exportFile):
 
 from anytree.exporter import DotExporter
 from anytree import PreOrderIter
-def exportDot(node, exportFile):
-    exportWithStyle(node, "subdir/"+exportFile)
+from os import mkdir
+def exportDot(node, exportDir):
+    mkdir(exportDir)
+    exportWithStyle(node, exportDir+"/root.svg")
     for subNode in PreOrderIter(node):
-        exportWithStyle(subNode, "subdir/"+str(subNode.name)+".dot")
+        exportWithStyle(subNode, exportDir+"/"+str(subNode.name)+".dot")
 
 
 
