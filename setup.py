@@ -18,12 +18,12 @@ README = read(str(HERE)+"/README.md")
 setup(
     name="du-analyzer",
     version="0.0.2",
-    description="Read the latest Real Python tutorials",
+    description="Generate disk utilization reports",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/realpython/reader",
-    author="Real Python",
-    author_email="office@realpython.com",
+    url="https://github.com/cinek810/cagedu",
+    author="Marcin Stolarek",
+    author_email="stolarek.marcin@gmail.com",
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
@@ -32,7 +32,7 @@ setup(
     ],
     packages=["cagedu"],
     include_package_data=True,
-    install_requires=["anytree"],
+    install_requires=["anytree", "matplotlib"],
     entry_points={
         "console_scripts": [
             "du-analyzer = cagedu.command_line:main",

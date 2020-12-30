@@ -11,7 +11,8 @@ from stat import S_ISREG
 
 class FileStat(NodeMixin):
     def __init__(self, name, stat, parent=None, children=None):
-        self.name = name
+        self.name = stat.st_ino
+        self.filename = name
         self.parent = parent
         self.totalSize = 0
         self.byteAge = 0
@@ -24,6 +25,8 @@ class FileStat(NodeMixin):
         self.st_mode = stat.st_mode
         self.st_mtime = stat.st_mtime
         self.st_size = stat.st_size
+        self.st_inode = stat.st_ino
+
 
 
     def addStats(self, fileSize, fileAge):

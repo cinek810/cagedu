@@ -47,9 +47,11 @@ def load_and_process(pathToLoad):
         cdu.calculateStats(rootNode)
         end = time.time()
         logging.info("\t took:%d seconds, processed:%d files" % (end - start, rootNode.totalFiles))
+        return rootNode
 
 
 DEF_BIN_PATH="./.cagedu.gz"
+DEF_GRAPH_FILE="./du-analyzer.dot"
 
 def main():
 
@@ -81,10 +83,22 @@ def main():
         parser.add_argument('-import', "--import", dest='importFile', type=str, default=DEF_BIN_PATH,
                 help='Path where to read results of scan');
         args = parse_options()
-        load_and_process(args.importFile)
+        rootNode = load_and_process(args.importFile)
 
-        logging.info("Printing the tree");
+        logging.info("Printing the tree...");
         cdu.printTree(rootNode)
+    elif sys.argv[1] == "dotexport":
+        (sys.argv).remove("dotexport")
+        parser.add_argument('-import', "--import", dest='importFile', type=str, default=DEF_BIN_PATH,
+                help='Path where to read results of scan');
+
+        parser.add_argument('-out', "--out", dest='outFile', type=str, default=DEF_GRAPH_FILE,
+                help='Path where to save the graphical output');
+        args = parse_options()
+        rootNode = load_and_process(args.importFile)
+        logging.info("Saving the tree...")
+        cdu.exportDot(rootNode, args.outFile)
+
     else:
         logging.error("No command given, supported sub commands are: scan and print")
      
