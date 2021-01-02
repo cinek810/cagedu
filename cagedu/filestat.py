@@ -10,8 +10,11 @@ from stat import S_ISREG
 #hierarchy = dict()
 
 class FileStat(NodeMixin):
-    def __init__(self, name, stat, parent=None, children=None):
-        self.name = stat.st_ino
+    def __init__(self, name = None, stat = None, parent=None, children=None):
+        if stat is not None:
+            self.name = stat.st_ino
+        else:
+            self.name = -1
         self.filename = name
         self.parent = parent
         self.totalSize = 0
@@ -22,10 +25,11 @@ class FileStat(NodeMixin):
         if parent is not None:
             logging.debug("Adding:%s with parent:%s" % (self.name, self.parent.name))
 
-        self.st_mode = stat.st_mode
-        self.st_mtime = stat.st_mtime
-        self.st_size = stat.st_size
-        self.st_inode = stat.st_ino
+        if stat is not None:
+            self.st_mode = stat.st_mode
+            self.st_mtime = stat.st_mtime
+            self.st_size = stat.st_size
+            self.st_inode = stat.st_ino
 
 
 

@@ -30,7 +30,7 @@ def load_tree(path):
     importer = DictImporter()
     with gzip.open(path, 'rb') as f:
         dataRead = pickle.load(f);
-        logging.info("dataRead="+str(dataRead))
+        logging.debug("dataRead="+str(dataRead))
         rootNode = importer.import_(dataRead)
 
     return rootNode
