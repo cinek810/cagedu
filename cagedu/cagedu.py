@@ -12,6 +12,14 @@ from cagedu.filestat import FileStat
 #results = dict()
 #hierarchy = dict()
 
+
+def scantree(path):
+    for f in os.scandir(path):
+        if f.is_dir(follow_symlinks=False):
+            yield from scantree(f.path)
+        else:
+            yield f
+
 def buildTree(top, maxDepth = 0, currentDepth = 0):
     logging.debug("currentDepth=%d maxDepth=%d" % (currentDepth, maxDepth))
     if maxDepth == 0 or currentDepth < maxDepth:
@@ -33,14 +41,12 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
                 top.addStats(statResult.st_size, statResult.st_mtime)
     else:
         logging.debug("Adding stats without new nodes")
-        for path, subdirs, files in os.walk(top.filename):
-            for f in files:
-                logging.debug("Joining %s and %s" % (top.filename, f));
-                pathname = os.path.join(path, f)
-                top.statAndAdd(pathname)
+        for f in scantree(top.filename):
+            logging.debug("Joining %s" % (f.path));
+            if f.is_file():
+                top.statAndAdd(f.path)
 
 def calculateStats(topNode):
-
     files = findall(topNode, lambda node: S_ISREG(node.st_mode))
     for fileNode in files:
         fileSize = fileNode.st_size
@@ -48,8 +54,6 @@ def calculateStats(topNode):
 
         logging.debug("calculate stat %s in %s" % (fileNode.filename, fileNode.parent.filename))
         fileNode.parent.addStats(fileNode.st_size, fileNode.st_mtime)
-
-
 
 def printTree(node):
     for pre, fill, node in RenderTree(node):
