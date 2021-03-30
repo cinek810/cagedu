@@ -15,21 +15,20 @@ from cagedu.filestat import FileStat
 def buildTree(top, maxDepth = 0, currentDepth = 0):
     logging.debug("currentDepth=%d maxDepth=%d" % (currentDepth, maxDepth))
     if maxDepth == 0 or currentDepth < maxDepth:
-        for f in os.listdir(top.filename):
-            pathname = os.path.join(top.filename, f)
-            try:
-                statResult = os.lstat(pathname)
-                mode = statResult.st_mode
-            except Exception as e:
-                logging.debug('Stat failed:%s, skipping %s' % (e, pathname))
-                continue
-
-            if S_ISDIR(mode):
-                logging.debug('Adding directory %s to parent "%s"' % (unicode(pathname).encode('utf-8'), top.filename))
-                newNode = FileStat(pathname, statResult, parent = top)
+        for f in os.scandir(top.filename):
+            pathname = os.path.join(top.filename, f.name)
+            if f.is_dir(follow_symlinks=False):
+                logging.debug('Adding directory %s to parent "%s"' % (str(pathname).encode('utf-8'), top.filename))
+                newNode = FileStat(pathname, None, parent = top)
                 newDepth = currentDepth + 1
                 buildTree(newNode, maxDepth = maxDepth, currentDepth = newDepth)
-            elif S_ISREG(mode):
+            elif f.is_file(follow_symlinks=False):
+                try:
+                    statResult = os.lstat(pathname)
+                except:
+                    logging.debug('Stat failed:%s, skipping %s' % (e, pathname))
+                    continue
+
                 logging.debug('Adding stat below maxDepth=%d currentDepth=%d for file=%s' % (maxDepth, currentDepth, pathname))
                 top.addStats(statResult.st_size, statResult.st_mtime)
     else:
@@ -58,9 +57,9 @@ def printTree(node):
             try:
                 timestamp = datetime.datetime.fromtimestamp(node.byteAge / node.totalSize)
                 date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                print("%s %s AveDate:%s Size:%.2fMB" % (unicode(pre).encode('utf-8'), unicode(node.filename).encode('utf-8'), date , node.totalSize / 1024 / 1024 ))
+                print("%s %s AveDate:%s Size:%.2fMB" % (str(pre).encode('utf-8'), str(node.filename).encode('utf-8'), date , node.totalSize / 1024 / 1024 ))
             except ZeroDivisionError:
-                print("%s %s (ZERO SIZE)" % (unicode(pre).encode('utf-8'), unicode(node.filename).encode('utf-8')))
+                print("%s %s (ZERO SIZE)" % (str(pre).encode('utf-8'), str(node.filename).encode('utf-8')))
 
 import matplotlib as mpl
 import matplotlib.cm as cm

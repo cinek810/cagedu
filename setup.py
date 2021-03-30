@@ -17,7 +17,7 @@ README = read(str(HERE)+"/README.md")
 # This call to setup() does all the work
 setup(
     name="du-analyzer",
-    version="0.0.4",
+    version="0.0.5",
     description="Generate disk utilization reports",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -28,7 +28,6 @@ setup(
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Programming Language :: Python :: 3.6"
-        "Programming Language :: Python :: 2.7"
     ],
     packages=["cagedu"],
     include_package_data=True,
