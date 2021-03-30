@@ -43,7 +43,7 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
         logging.debug("Adding stats without new nodes")
         for f in scantree(top.filename):
             logging.debug("Joining %s" % (f.path));
-            if f.is_file():
+            if f.is_file(follow_symlinks=False):
                 top.statAndAdd(f.path)
 
 def calculateStats(topNode):
