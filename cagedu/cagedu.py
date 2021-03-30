@@ -181,26 +181,26 @@ def exportDot(node, exportDir):
 
 
 
-
-def main(mainPath):
-    rootDir = mainPath
-    try:
-        rootStat = os.stat(rootDir)
-    except:
-        logging.error("Stat on %d failed exiting" % (rootDir))
-        os.exit(1)
-
-    rootNode = FileStat(rootDir,rootStat)
-
-    logging.info("Building the tree information");
-    buildTree(rootNode, maxDepth=3)
-
-    logging.info("Processing data structure");
-    calculateStats(rootNode)
-
-    logging.info("Printing the tree");
-    printTree(rootNode)
-
-if __name__ == '__main__':
-    main(sys.argv[1])
-    #DotExporter(rootNode, maxlevel=3).to_picture("/home/cinek/myTree.png");
+#
+#def main(mainPath):
+#    rootDir = mainPath
+#    try:
+#        rootStat = os.stat(rootDir)
+#    except:
+#        logging.error("Stat on %d failed exiting" % (rootDir))
+#        os.exit(1)
+#
+#    rootNode = FileStat(rootDir,rootStat)
+#
+#    logging.info("Building the tree information");
+#    buildTree(rootNode, maxDepth=3)
+#
+#    logging.info("Processing data structure");
+#    calculateStats(rootNode)
+#
+#    logging.info("Printing the tree");
+#    printTree(rootNode)
+#
+#if __name__ == '__main__':
+#    main(sys.argv[1])
+#    #DotExporter(rootNode, maxlevel=3).to_picture("/home/cinek/myTree.png");
