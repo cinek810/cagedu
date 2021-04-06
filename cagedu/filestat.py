@@ -3,6 +3,7 @@ from anytree.exporter import DotExporter
 import logging
 import os
 from stat import S_ISREG
+import hashlib
 
 
 
@@ -14,7 +15,8 @@ class FileStat(NodeMixin):
         if stat is not None:
             self.name = stat.st_ino
         else:
-            self.name = -1
+            self.name = hashlib.md5(name)
+
         self.filename = name
         self.parent = parent
         self.totalSize = 0
