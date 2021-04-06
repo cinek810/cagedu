@@ -76,7 +76,7 @@ def calculateStats(topNode):
 
 def printTree(node):
     for pre, fill, node in RenderTree(node):
-        if isRegular(node.st_mode):
+        if isRegular(node):
             try:
                 timestamp = datetime.datetime.fromtimestamp(node.byteAge / node.totalSize)
                 date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
