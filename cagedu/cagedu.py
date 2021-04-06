@@ -154,10 +154,6 @@ def edgeStyle(parent, child):
 def exportWithStyle(node, exportFile):
     index = 0
 
-    if node.name == -1:
-        node.name = str(hashlib.md5(str(node.filename).encode('utf-8')).hexdigest()).encode('utf-8')
-        logging.error("Overriding name from -1 for %s to %s" % (str(node.filename),node.name));
-
     orderedRanks = LevelOrderGroupIter(node, maxlevel=2, filter_ = builtInFilter);
     sortedList = []
     sortedSet = set()
@@ -206,6 +202,10 @@ def exportDot(node, exportDir):
 
     exportWithStyle(node, exportDir+"/index.dot")
     for subNode in PreOrderIter(node):
+        if subNode.name == -1:
+            subNode.name = str(hashlib.md5(str(subNode.filename).encode('utf-8')).hexdigest()).encode('utf-8')
+            logging.error("Overriding name from -1 for %s to %s" % (str(subNode.filename),subNode.name));
+
         exportWithStyle(subNode, exportDir+"/"+str(subNode.name)+".dot")
 
 
