@@ -56,7 +56,7 @@ def findRegular(node):
 def calculateStats(topNode):
     files = findall(topNode, findRegular)
     for fileNode in files:
-        logging.debug("calculate stat %s in %s" % (fileNode.filename, fileNode.parent.filename))
+        logging.debug("Calculate stat on %s" % (fileNode))
         try:
             fileSize = fileNode.st_size
         except:
