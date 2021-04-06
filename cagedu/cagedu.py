@@ -7,6 +7,7 @@ from stat import *
 from anytree import NodeMixin, RenderTree, findall
 import logging
 from cagedu.filestat import FileStat
+import hashlib
 
 
 #results = dict()
@@ -152,6 +153,9 @@ def edgeStyle(parent, child):
 #For 3rd level only subdirectories of size >= 25% of parent are displayed
 def exportWithStyle(node, exportFile):
     index = 0
+
+    if node.name == -1:
+        node.name = hashlib.md5(str(node.filename).encode('utf-8'))
 
     orderedRanks = LevelOrderGroupIter(node, maxlevel=2, filter_ = builtInFilter);
     sortedList = []
