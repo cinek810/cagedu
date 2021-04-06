@@ -46,7 +46,7 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
             if f.is_file(follow_symlinks=False):
                 top.statAndAdd(f.path)
 
-def findRegular(node):
+def isRegular(node):
     try:
         yield S_ISREG(node.st_mode)
     except:
@@ -54,18 +54,20 @@ def findRegular(node):
         yield False
 
 def calculateStats(topNode):
-    files = findall(topNode, findRegular)
+    files = findall(topNode, isRegular)
     for fileNode in files:
         logging.debug("Calculate stat on %s" % (fileNode))
         try:
             fileSize = fileNode.st_size
         except:
             logging.error("Node doesn't have st_size: %s" % (fileNode))
+            continue
 
         try:
             fileAge = fileNode.st_mtime
         except:
             logging.error("Node doesn't have st_mtime");
+            continue
 
         try:
             fileNode.parent.addStats(fileNode.st_size, fileNode.st_mtime)
@@ -74,7 +76,7 @@ def calculateStats(topNode):
 
 def printTree(node):
     for pre, fill, node in RenderTree(node):
-        if S_ISDIR(node.st_mode):
+        if isRegular(node.st_mode):
             try:
                 timestamp = datetime.datetime.fromtimestamp(node.byteAge / node.totalSize)
                 date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
