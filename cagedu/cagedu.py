@@ -46,14 +46,31 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
             if f.is_file(follow_symlinks=False):
                 top.statAndAdd(f.path)
 
-def calculateStats(topNode):
-    files = findall(topNode, lambda node: S_ISREG(node.st_mode))
-    for fileNode in files:
-        fileSize = fileNode.st_size
-        fileAge = fileNode.st_mtime 
+def findRegular(node):
+    try:
+        yield S_ISREG(node.st_mode)
+    except:
+        logging.error("Node doesn't have st_mode:%s" % (node));
+        yield False
 
+def calculateStats(topNode):
+    files = findall(topNode, findRegular)
+    for fileNode in files:
         logging.debug("calculate stat %s in %s" % (fileNode.filename, fileNode.parent.filename))
-        fileNode.parent.addStats(fileNode.st_size, fileNode.st_mtime)
+        try:
+            fileSize = fileNode.st_size
+        except:
+            logging.error("Node doesn't have st_size: %s" % (fileNode))
+
+        try:
+            fileAge = fileNode.st_mtime
+        except:
+            logging.error("Node doesn't have st_mtime");
+
+        try:
+            fileNode.parent.addStats(fileNode.st_size, fileNode.st_mtime)
+        except:
+            logging.error("Failed to add stat to parent for %s" % (fileNode))
 
 def printTree(node):
     for pre, fill, node in RenderTree(node):
