@@ -155,8 +155,8 @@ def exportWithStyle(node, exportFile):
     index = 0
 
     if node.name == -1:
-        logging.error("Overriding name from -1");
         node.name = hashlib.md5(str(node.filename).encode('utf-8'))
+        logging.error("Overriding name from -1 for %s to %s" % (str(node.filename),node.name));
 
     orderedRanks = LevelOrderGroupIter(node, maxlevel=2, filter_ = builtInFilter);
     sortedList = []
