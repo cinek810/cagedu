@@ -48,7 +48,8 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
 
 def isRegular(node):
     try:
-        yield S_ISREG(node.st_mode)
+        if(S_ISREG(node.st_mode)):
+            return True
     except:
         logging.error("Node doesn't have st_mode:%s" % (node));
         yield False
