@@ -17,7 +17,7 @@ README = read(str(HERE)+"/README.md")
 # This call to setup() does all the work
 setup(
     name="du-analyzer",
-    version="0.0.28",
+    version="0.0.29",
     description="Generate disk utilization reports",
     long_description=README,
     long_description_content_type="text/markdown",

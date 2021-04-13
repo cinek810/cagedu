@@ -28,7 +28,7 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
             pathname = os.path.join(top.filename, f.name)
             if f.is_dir(follow_symlinks=False):
                 logging.debug('Adding directory %s to parent "%s"' % (str(pathname).encode('utf-8'), top.filename))
-                newNode = FileStat(pathname, None, parent = top)
+                newNode = FileStat(name = pathname, parent = top)
                 newDepth = currentDepth + 1
                 buildTree(newNode, maxDepth = maxDepth, currentDepth = newDepth)
             elif f.is_file(follow_symlinks=False):
