@@ -73,8 +73,8 @@ def calculateStats(topNode):
 
         try:
             fileNode.parent.addStats(fileNode.st_size, fileNode.st_mtime)
-        except:
-            logging.error("Failed to add stat to parent for %s" % (fileNode))
+        except Exception as e:
+            logging.error("Failed to add stat to parent for %s, error: %s" % (fileNode, str(e)))
 
 def printTree(node):
     for pre, fill, node in RenderTree(node):
@@ -203,7 +203,7 @@ def exportDot(node, exportDir):
     exportWithStyle(node, exportDir+"/index.dot")
     for subNode in PreOrderIter(node):
         if subNode.name == -1:
-            subNode.name = str(hashlib.md5(str(subNode.filename).encode('utf-8')).hexdigest()).encode('utf-8')
+            subNode.name = str(hashlib.md5(str(subNode.filename).encode('utf-8')).hexdigest())
             logging.error("Overriding name from -1 for %s to %s" % (str(subNode.filename),subNode.name));
 
         exportWithStyle(subNode, exportDir+"/"+str(subNode.name)+".dot")
