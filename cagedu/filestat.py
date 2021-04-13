@@ -11,14 +11,11 @@ import hashlib
 #hierarchy = dict()
 
 class FileStat(NodeMixin):
-    def __init__(self, name = None, stat = None, parent=None, children=None):
+    def __init__(self, name, stat = None, parent=None, children=None):
         if stat is not None:
             self.name = stat.st_ino
-        elif self.name is not None:
-            self.name = str(hashlib.md5(str(self.name).encode('utf-8')).hexdigest()).encode('utf-8')
         else:
-            logging.error("Name of FileStat object should not be none")
-            self.name = -1
+            self.name = str(hashlib.md5(str(name).encode('utf-8')).hexdigest()).encode('utf-8')
 
         self.filename = name
         self.parent = parent
