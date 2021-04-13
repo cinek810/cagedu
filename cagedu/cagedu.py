@@ -184,7 +184,7 @@ def exportWithStyle(node, exportFile):
 
         sortedString += "[style = invis];}"
 
-
+    logging.error("%s" % (exportFile))
 
     DotExporter(node, options = ['rankdir=LR;', sortedString], nodenamefunc = nodeName,  nodeattrfunc = nodeStyle, edgeattrfunc = edgeStyle, indent = 1, maxlevel = 3).to_dotfile(exportFile)
 
@@ -205,10 +205,10 @@ def exportDot(node, exportDir):
     exportWithStyle(node, exportDir+"/index.dot")
     for subNode in PreOrderIter(node):
         if subNode.name == -1:
-            subNode.name = str(hashlib.md5(str(subNode.filename)).hexdigest())
-            logging.error("Overriding name from -1 for %s to %s" % (str(subNode.filename),subNode.name));
+            logging.error("Node name is -1 for %s, skipping it. This should never happen" % (subNode.filename));
+            continue
 
-        exportWithStyle(subNode, exportDir+"/"+str(subNode.name)+".dot")
+        exportWithStyle(subNode, exportDir+"/"+subNode.name+".dot")
 
 def dot2svg(inDir, outDir):
     try:

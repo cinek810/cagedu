@@ -13,9 +13,9 @@ import base64
 class FileStat(NodeMixin):
     def __init__(self, name, stat = None, parent=None, children=None):
         if stat is not None:
-            self.name = stat.st_ino
+            self.name = str(stat.st_ino)
         else:
-            self.name = str(base64.urlsafe_b64encode(str(name).encode('utf-8')).hexdigest())
+            self.name = base64.standard_b64encode(name.encode("utf-8")).decode("utf-8")
 
         self.filename = name
         self.parent = parent
