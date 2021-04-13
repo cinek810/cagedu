@@ -15,7 +15,7 @@ class FileStat(NodeMixin):
         if stat is not None:
             self.name = stat.st_ino
         else:
-            self.name = str(hashlib.md5(str(node.filename).encode('utf-8')).hexdigest()).encode('utf-8')
+            self.name = str(hashlib.md5(str(self.filename).encode('utf-8')).hexdigest()).encode('utf-8')
 
         self.filename = name
         self.parent = parent
