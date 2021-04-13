@@ -53,6 +53,7 @@ def load_and_process(pathToLoad):
 DEF_BIN_PATH="./.cagedu.gz"
 DEF_GRAPH_DIR="./dot-export"
 DEF_SVG_DIR="./svg-export"
+DEF_MAX_DEPTH=6
 
 def main():
 
@@ -60,6 +61,8 @@ def main():
         (sys.argv).remove("scan")
         parser.add_argument ("-export", "--export", dest='exportFile', type=str, default=DEF_BIN_PATH,
                 help='Path where to store scan result')
+        parser.add_argument("-maxdepth", "--maxdepth", dest='maxDepth', type=int, default=DEF_MAX_DEPTH,
+                help='Max depth where scan will store directories structure');
         args = parse_options()
         rootDir = args.path
         logging.info("Building the tree information for %s" % (rootDir));
@@ -71,7 +74,7 @@ def main():
 
         rootNode = FileStat(rootDir,rootStat)
         start = time.time()
-        cdu.buildTree(rootNode, maxDepth=3)
+        cdu.buildTree(rootNode, maxDepth=args.maxDepth)
         end = time.time()
         logging.info("\t took:%d seconds, processed:%d files" % (end - start, rootNode.totalFiles))
 
