@@ -25,20 +25,19 @@ def buildTree(top, maxDepth = 0, currentDepth = 0):
     logging.debug("currentDepth=%d maxDepth=%d" % (currentDepth, maxDepth))
     if maxDepth == 0 or currentDepth < maxDepth:
         for f in os.scandir(top.filename):
-            pathname = os.path.join(top.filename, f.name)
             if f.is_dir(follow_symlinks=False):
-                logging.debug('Adding directory %s to parent "%s"' % (str(pathname).encode('utf-8'), top.filename))
-                newNode = FileStat(name = pathname, parent = top)
+                logging.debug('Adding directory %s to parent "%s"' % (str(f.path).encode('utf-8'), top.filename))
+                newNode = FileStat(name = f.path, parent = top)
                 newDepth = currentDepth + 1
                 buildTree(newNode, maxDepth = maxDepth, currentDepth = newDepth)
             elif f.is_file(follow_symlinks=False):
                 try:
-                    statResult = os.lstat(pathname)
+                    statResult = os.lstat(f.path)
                 except:
-                    logging.debug('Stat failed:%s, skipping %s' % (e, pathname))
+                    logging.debug('Stat failed:%s, skipping %s' % (e, f.path))
                     continue
 
-                logging.debug('Adding stat below maxDepth=%d currentDepth=%d for file=%s' % (maxDepth, currentDepth, pathname))
+                logging.debug('Adding stat below maxDepth=%d currentDepth=%d for file=%s' % (maxDepth, currentDepth, f.path))
                 top.addStats(statResult.st_size, statResult.st_mtime)
     else:
         logging.debug("Adding stats without new nodes")
