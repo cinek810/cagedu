@@ -82,9 +82,9 @@ def printTree(node):
             try:
                 timestamp = datetime.datetime.fromtimestamp(node.byteAge / node.totalSize)
                 date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                print("%s %s AveDate:%s Size:%.2fMB" % (str(pre).encode('utf-8'), str(node.filename).encode('utf-8'), date , node.totalSize / 1024 / 1024 ))
+                print("%s %s AveDate:%s Size:%.2fMB" % (str(pre), str(node.filename), date , node.totalSize / 1024 / 1024 ))
             except ZeroDivisionError:
-                print("%s %s (ZERO SIZE)" % (str(pre).encode('utf-8'), str(node.filename).encode('utf-8')))
+                print("%s %s (ZERO SIZE)" % (str(pre), str(node.filename)))
 
 import matplotlib as mpl
 import matplotlib.cm as cm
@@ -164,24 +164,27 @@ def exportWithStyle(node, exportFile):
             continue
         for nnode in group:
             sortedSet.add(nnode)
+    
+    sortedString = ""
+    if sortedSet:
+        sortedSet = sorted(sortedSet, key = sortByNodeSize, reverse = True)
+        sortedString = "{rank=same;rankdir=TB;"
+        firstNode = True
 
-    sortedSet = sorted(sortedSet, key = sortByNodeSize, reverse = True)
-    sortedString = "{rank=same;rankdir=TB;"
-    firstNode = True
+        oldParent = None
+        for nnode in sortedSet:
+            if firstNode:
+                firstNode = False
+            else:
+                sortedString += '->'
+            if oldParent is not None and oldParent != nnode.parent:
+                logging.info(str(nnode.filename)+"--"+str(oldParent.filename)+" !=  "+str(nnode.parent.filename))
+                break
+            sortedString += '"'+nodeName(nnode)+'"'
+            oldParent = nnode.parent
 
-    oldParent = None
-    for nnode in sortedSet:
-        if firstNode:
-            firstNode = False
-        else:
-            sortedString += '->'
-        if oldParent is not None and oldParent != nnode.parent:
-            logging.info(str(nnode.filename)+"--"+str(oldParent.filename)+" !=  "+str(nnode.parent.filename))
-            break
-        sortedString += '"'+nodeName(nnode)+'"'
-        oldParent = nnode.parent
+        sortedString += "[style = invis];}"
 
-    sortedString += "[style = invis];}"
 
 
     DotExporter(node, options = ['rankdir=LR;', sortedString], nodenamefunc = nodeName,  nodeattrfunc = nodeStyle, edgeattrfunc = edgeStyle, indent = 1, maxlevel = 3).to_dotfile(exportFile)
@@ -203,11 +206,28 @@ def exportDot(node, exportDir):
     exportWithStyle(node, exportDir+"/index.dot")
     for subNode in PreOrderIter(node):
         if subNode.name == -1:
-            subNode.name = str(hashlib.md5(str(subNode.filename).encode('utf-8')).hexdigest())
+            subNode.name = str(hashlib.md5(str(subNode.filename)).hexdigest())
             logging.error("Overriding name from -1 for %s to %s" % (str(subNode.filename),subNode.name));
 
         exportWithStyle(subNode, exportDir+"/"+str(subNode.name)+".dot")
 
+def dot2svg(inDir, outDir):
+    try:
+        os.system("dot -V")
+    except:
+        logging.fatal("dot2svg subcommand required dot app to be installed and available in $PATH");
+        return
+
+    if not os.path.exists(outDir):
+        try:
+            os.mkdir(outDir)
+        except Exception as e:
+            logging.fatal("Failed creating output directory: %s" % (str(e)))
+        
+
+    for file in os.scandir(inDir):
+        nameNoExt = os.path.splitext(file.name)[0]
+        os.system("dot -T svg "+inDir+"/"+file.name+" -o "+outDir+"/"+nameNoExt+".svg")
 
 
 #
