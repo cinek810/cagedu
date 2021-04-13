@@ -39,9 +39,9 @@ class FileStat(NodeMixin):
         self.totalSize += fileSize
         self.byteAge += fileSize * fileAge
         self.totalFiles += 1
-        logging.debug("totalFiles:%d name:%s" % (self.totalFiles, self.name))
+        logging.debug("totalFiles:%d name: %s(%s)" % (self.totalFiles, self.filename, self.name))
         if self.parent:
-            logging.debug("Internal adding stats to %s" %  (self.name)) 
+            logging.debug("Internal adding stats to %s (%s)" %  (self.filename, self.name)) 
             self.parent.addStats(fileSize, fileAge)
 
     def statAndAdd(self, pathname):
