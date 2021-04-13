@@ -3,7 +3,7 @@ from anytree.exporter import DotExporter
 import logging
 import os
 from stat import S_ISREG
-import hashlib
+import base64
 
 
 
@@ -15,7 +15,7 @@ class FileStat(NodeMixin):
         if stat is not None:
             self.name = stat.st_ino
         else:
-            self.name = str(hashlib.md5(str(name).encode('utf-8')).hexdigest())
+            self.name = str(base64.urlsafe_b64encode(str(name).encode('utf-8')).hexdigest())
 
         self.filename = name
         self.parent = parent
