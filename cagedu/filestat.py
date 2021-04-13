@@ -16,7 +16,7 @@ class FileStat(NodeMixin):
             self.name = stat.st_ino
         elif self.name is not None:
             self.name = str(hashlib.md5(str(self.name).encode('utf-8')).hexdigest()).encode('utf-8')
-        else
+        else:
             logging.error("Name of FileStat object should not be none")
             self.name = -1
 
