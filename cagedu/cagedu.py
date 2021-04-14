@@ -186,9 +186,9 @@ def exportWithStyle(node, exportFile):
 
     logging.error("%s" % (exportFile))
 
-    DotExporter(node, options = ['rankdir=LR;', sortedString], nodenamefunc = nodeName,  nodeattrfunc = nodeStyle, edgeattrfunc = edgeStyle, indent = 1, maxlevel = 3).to_dotfile(exportFile)
+    UniqueDotExporter(node, options = ['rankdir=LR;', sortedString], nodenamefunc = nodeName,  nodeattrfunc = nodeStyle, edgeattrfunc = edgeStyle, indent = 1, maxlevel = 3).to_dotfile(exportFile)
 
-from anytree.exporter import DotExporter
+from anytree.exporter import UniqueDotExporter
 from anytree import PreOrderIter, LevelOrderGroupIter
 from os import mkdir
 import errno
